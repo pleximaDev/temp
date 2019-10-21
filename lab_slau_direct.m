@@ -120,7 +120,7 @@ for i = 1 : 1 : 4
     T(i, 5) = t * ok;
     X(:, 5, i) = x;
 end
-Temp = T
+
 %=========================================================================%
 
 
@@ -192,10 +192,25 @@ end
 
 
 
+for i = 1 : 1 : 4
+    Gauss = X(:, 1, i);
+    Gauss_Jordan = X(:, 2, i);
+    Cramer = X(:, 3, i);
+    Invertible_matrix = X(:, 4, i);
+    Cholesky = X(:, 5, i);
+    fprintf("%s\n\n", D{i}{3});
+    fprintf("A");
+    disp(D{i}{1});
+    fprintf("b");
+    disp(D{i}{2});
+    table(Gauss, Gauss_Jordan, Invertible_matrix, Cholesky);
+end
+% methods = ('Gauss','Gauss Jordan','Cramer','Invertible matrix','Cholesky');
 
 
 
 
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++%
 function [x, ok] = lab_slau_gauss(A, b)
 ok = false;
 [m, n] = size(A);

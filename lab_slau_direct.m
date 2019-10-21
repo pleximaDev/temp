@@ -208,6 +208,30 @@ end
 % methods = ('Gauss','Gauss Jordan','Cramer','Invertible matrix','Cholesky');
 
 
+clf;
+subplot(1,2,1);
+bar(T')
+title('Direct methods')
+ylabel('Time, ms');
+xlabel('Methods');
+ax = gca;
+ax.XTickLabel={'Gauss','Gauss-Jordan',' Cramer',' Inverse ',' Cholesky'};
+grid on
+legend({'A>0, Symmetric','A<0, Symmetric','A<0, Sparse','A randn'},'location','eastoutside');
+
+
+T(4, :) = []
+
+
+subplot(1,2,2);
+bar(T')
+title('Direct methods')
+ylabel('Time, ms');
+xlabel('Methods');
+ax = gca;
+ax.XTickLabel={'Gauss','Gauss-Jordan',' Cramer',' Inverse ',' Cholesky'};
+legend({'A>0, Symmetric','A<0, Symmetric','A randn'},'location','eastoutside');
+
 
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++%

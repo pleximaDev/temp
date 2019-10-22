@@ -131,7 +131,7 @@ for i = 1 : 1 : 4
     A = D{i}{1};
     b = D{i}{2};
     
-    Vector_tmp = 0;
+%     Vector_tmp = 0;
     for j = 1 : 1 : N
         tic
         [x, ok] = lab_slau_gauss(A, b);
@@ -140,10 +140,10 @@ for i = 1 : 1 : 4
         end
         Vector_tmp(j) = toc;
     end
-    T(i, 1) = mean(Vector_tmp);
+    T(i, 1) = mean(Vector_tmp * ok);
     
     
-    Vector_tmp = 0;
+%     Vector_tmp = 0;
     for j = 1 : 1 : N
         tic
         [x, ok] = lab_slau_gauss_jordan(A, b);
@@ -152,10 +152,10 @@ for i = 1 : 1 : 4
         end
         Vector_tmp(j) = toc;
     end
-    T(i, 2) = mean(Vector_tmp);
+    T(i, 2) = mean(Vector_tmp * ok);
     
     
-    Vector_tmp = 0;
+%     Vector_tmp = 0;
     for j = 1 : 1 : N
         tic
         [x, ok] = lab_slau_minv(A, b);
@@ -164,9 +164,9 @@ for i = 1 : 1 : 4
         end
         Vector_tmp(j) = toc;
     end
-    T(i, 3) = mean(Vector_tmp);
+    T(i, 3) = mean(Vector_tmp * ok);
     
-    Vector_tmp = 0;
+%     Vector_tmp = 0;
     for j = 1 : 1 : N
         tic
         [x, ok] = lab_slau_Cramer(A, b);
@@ -175,9 +175,9 @@ for i = 1 : 1 : 4
         end
         Vector_tmp(j) = toc;
     end
-    T(i, 4) = mean(Vector_tmp);
+    T(i, 4) = mean(Vector_tmp * ok);
     
-    Vector_tmp = 0;
+%     Vector_tmp = 0;
     for j = 1 : 1 : N
         tic
         [x, ok] = lab_slau_chol(A, b);
@@ -186,9 +186,9 @@ for i = 1 : 1 : 4
         end
         Vector_tmp(j) = toc;
     end
-    T(i, 5) = mean(Vector_tmp);
+    T(i, 5) = mean(Vector_tmp * ok);
 end
-
+Temp =T
 
 
 
@@ -217,7 +217,8 @@ xlabel('Methods');
 ax = gca;
 ax.XTickLabel={'Gauss','Gauss-Jordan',' Cramer',' Inverse ',' Cholesky'};
 grid on
-legend({'A>0, Symmetric','A<0, Symmetric','A<0, Sparse','A randn'},'location','eastoutside');
+grid minor
+legend({'A>0, Symmetric','A<0, Symmetric','A non-symmetric randn','A<0, Sparse'},'location','eastoutside');
 
 
 T(4, :) = []
@@ -230,7 +231,9 @@ ylabel('Time, ms');
 xlabel('Methods');
 ax = gca;
 ax.XTickLabel={'Gauss','Gauss-Jordan',' Cramer',' Inverse ',' Cholesky'};
-legend({'A>0, Symmetric','A<0, Symmetric','A randn'},'location','eastoutside');
+grid on
+grid minor
+legend({'A>0, Symmetric','A<0, Symmetric','A non-semmytric randn'},'location','eastoutside');
 
 
 
@@ -364,8 +367,26 @@ if ok
         end
         L(i,i) = (A(i,i) - sumii)^(1/2);
     end
-    y = L^(-1) * b;
-    x = (L^(-1))' * y;
+    
+    
+    for k = 1 : 1 : n
+        sum = 0;
+        for l = 1 : 1 : k - 1
+            sum = sum + L(l, k) * y(l - 1);
+        end
+        y(k) = (b(k) - sum)/L(k, k);
+    end
+    
+    for k = n : 1 : 1
+        sum = 0;
+        for l = 1 : 1 : k - 1
+            sum = sum + L(k, l) * x(l - 1);
+        end
+        x(k) = (b(k) - sum)/L(k, k);
+    end
+    
+%     y = L^(-1) * b;
+%     x = (L^(-1))' * y;
 end
 end
 

@@ -188,7 +188,6 @@ for i = 1 : 1 : 4
     end
     T(i, 5) = mean(Vector_tmp * ok);
 end
-Temp =T
 
 
 
@@ -218,7 +217,7 @@ ax = gca;
 ax.XTickLabel={'Gauss','Gauss-Jordan',' Cramer',' Inverse ',' Cholesky'};
 grid on
 grid minor
-legend({'A>0, Symmetric','A<0, Symmetric','A non-symmetric randn','A<0, Sparse'},'location','eastoutside');
+legend({'A>0, Symmetric','A<0, Symmetric','A non-symmetric randn','A<0, Sparse'},'location','northeastoutside');
 
 
 T(4, :) = []
@@ -233,7 +232,7 @@ ax = gca;
 ax.XTickLabel={'Gauss','Gauss-Jordan',' Cramer',' Inverse ',' Cholesky'};
 grid on
 grid minor
-legend({'A>0, Symmetric','A<0, Symmetric','A non-semmytric randn'},'location','eastoutside');
+legend({'A>0, Symmetric','A<0, Symmetric','A non-semmytric randn'},'location','northeastoutside');
 
 
 
@@ -369,20 +368,19 @@ if ok
     end
     
     
-    for k = 1 : 1 : n
+    for i = 1 : 1 : n
         sum = 0;
-        for l = 1 : 1 : k - 1
-            sum = sum + L(l, k) * y(l - 1);
+        for k = 1 : 1 : i - 1
+            sum = sum + L(i, k) * y(k);
         end
-        y(k) = (b(k) - sum)/L(k, k);
+        y(i) = (b(i) - sum)/L(i, i);
     end
-    
-    for k = n : 1 : 1
+    for i = n : -1 : 1
         sum = 0;
-        for l = 1 : 1 : k - 1
-            sum = sum + L(k, l) * x(l - 1);
+        for k = i + 1 : 1 : n
+            sum = sum + L(k, i) * x(k);
         end
-        x(k) = (b(k) - sum)/L(k, k);
+        x(i) = (y(i) - sum)/L(i, i);
     end
     
 %     y = L^(-1) * b;

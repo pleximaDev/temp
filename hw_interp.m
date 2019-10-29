@@ -36,7 +36,7 @@ grid on;
 grid minor;
 
 % plot(x0, f4);
-plot(x0, f0, 'LineWidth', 1.5); 
+stem(x0, f0, 'LineWidth', 1.5); 
 stem(x1, f1, 'LineWidth', 1.5);
 stairs(x0, f2, 'LineWidth', 1.5);
 plot(x0, f3, 'LineWidth', 1.5);
@@ -54,8 +54,11 @@ hold on
 plot(x0, f5, 'LineWidth', 1.5);
 plot(x0, f6, 'LineWidth', 1.5);
 plot(x0, f7, 'LineWidth', 1.5);
-plot(x0, f0, 'LineWidth', 1.5);
+stem(x0, f0, 'LineWidth', 1.5);
 stem(x1, f1, 'LineWidth', 1.5);
+
+stem(x0, f0, 'LineWidth', 1.5);
+
 % hold on;
 grid on;
 grid minor;
@@ -71,6 +74,36 @@ hold off;
 % ylabel('f(x)');
 % xlabel('x');
 % hold off;
+
+%____________________________________________
+N1 = length(x1);
+j = length(x1)
+d(:, 1) = f1(:)
+% finite_d = f1;
+% f_odd = f1(2:2:N1)
+% f_odd = f_odd'
+% f_even = f1(1:2:N1)
+% f_even = f_even'
+for i = 2 : 1 : N1
+    l = j : -1 : 2
+    d(l-1, i) = d(l, i - 1) - d(l-1, i - 1)
+%     d(j - 1:-1:1, i) = d(j:-1:1, i - 1) - d(j - 1:-1:1, i - 1)
+    j = j - 1;
+end
+j = 2
+d_rev(:, 1) = f1(:)
+for i = 2 : 1 : N1
+    l = N1 : -1 : j
+    d_rev(l, i) = d_rev(l, i - 1) - d_rev(l-1, i - 1)
+%     d(j - 1:-1:1, i) = d(j:-1:1, i - 1) - d(j - 1:-1:1, i - 1)
+    j = j + 1;
+end
+
+j = 9:-1:1
+
+
+return
+%____________________________________________
 
 
 
@@ -172,11 +205,34 @@ end
 % end
 %}
 
+% finite_diff(odd(i:1:length(x0)) - even(1:1:length(x0)))
 
 
 function [f, x0] = Newton_polynomial_w(f1, x1, x0, Newton)
+% finite_diff matrix here by one loop
+
 f=zeros(length(x0), 1);
 n = length(x1) - 1;
+
+N1 = length(x1);
+j = length(x1)
+d(:, 1) = f1(:)
+for i = 2 : 1 : N1
+    d(j - 1, i) = d(j, i - 1) - d(j - 1, i - 1)
+    j = j - 1;
+end
+d
+return
+
+% % % % finite_diff = f1;
+% % % % for i = 1 : 1 : length(x0)
+% % % %     finit_diff = horzcat(finite_diff, finite_diff())
+% % % % end
+
+% for v = 1 : 1 : n
+%     C = factorial(N)/(factorial(v)*factorial(N - v));
+% 	finite_diff = finite_diff + (-1)^(v) * C *f1(1 + i - v);
+% end
 
 switch Newton
     case 'forward'
@@ -260,6 +316,7 @@ end
 % end
 
 function [f, x0] = cubic_spline(f1, x1, x0)
+% h as variable, not vector
 shift = 1;
 n = length(x1) - 1;
 f = zeros(length(x0), 1);
@@ -289,13 +346,16 @@ for k = 1 : 1 : n
 end
 
 k = 1;
-for i= 1 : 1 : length(x0)
+for i = 1 : 1 : length(x0)
+    
+    if(x0(i) > x1(k + 1))
+            k=k + 1;
+    end
+        
     h(k) = x0(i) - x1(k);
     f(i)=a(k) + b(k) * h(k) + c(k) * (h(k))^2 + d(k) * (h(k))^3;
     
-        if(x0(i) > x1(k + 1))
-            k=k + 1;
-        end
+        
 end 
 % k = 2;
 % for i = 1 : 1 : length(x0)

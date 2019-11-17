@@ -31,7 +31,7 @@ Kmax = 1000;
 
 %=========================================================================%
 %==============================obtaining data=============================%
-K = 16;
+K = 4;
 b = randn(K, 1);
 I = eye(K);
 
@@ -295,7 +295,7 @@ g = D^(-1) * b;
 ok = (all(eig(B) < 1));
 
 if ok 
-    while(k < Kmax) && (all(abs(x_kplus1 - x_k)) > eps)
+    while(k < Kmax) && (norm(x_kplus1 - x_k) > eps)
         x_k = x_kplus1;
         for i = 1 : 1 : m
             sum = 0;
@@ -481,6 +481,11 @@ end
 end
 
 
+    
+    
+    
+    
+    
     
     
     

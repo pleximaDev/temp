@@ -146,6 +146,7 @@ end
 
 
 N = 1000;
+Vector_tmp = 0;
 for i = 1 : 1 : 4
     A = D{i}{1};
     b = D{i}{2};
@@ -406,12 +407,14 @@ ok = isreal(A) * issymmetric(A) * (all(eig(A) > 0));
 
 if ok
     while(k < Kmax) &&  (norm(A * x - b) > eps)
-        alpha = dot(r, r)/dot(A*z, z);
-        x = x + alpha * z;
-        temp = dot(r, r);
-        r = r - alpha * A * z;
-        betta = dot(r, r)/(temp);
-        z = r + betta * z;
+        r_prev = r;
+        x_prev = x;
+        z_prev = z;
+        alpha = dot(r_prev, r_prev)/dot(A * z_prev, z_prev);
+        x = x_prev + alpha * z_prev;
+        r = r_prev - alpha * A * z_prev;
+        betta = dot(r, r)/(dot(r_prev, r_prev));
+        z = r + betta * z_prev;
         k = k + 1;
     end
 end
@@ -434,14 +437,17 @@ ok = isreal(A) * (all(eig(A) > 0));
 if ok
     while(k < Kmax) &&  (norm(A * x - b) > eps)
         p_prev = p;
-        alpha = dot(p_prev, r)/dot(s, A * z);
-        x = x + alpha * z;
-        r = r - alpha * A * z;
-        p = p_prev - alpha * A' * s;
-        betta = dot(p, r)/dot(p_prev, r);
-        z = r + betta * z;
-        s = p + betta * s;
-
+        r_prev = r;
+        x_prev = x;
+        z_prev = z;
+        s_prev = s;
+        alpha = dot(p_prev, r_prev)/dot(s_prev, A * z_prev);
+        x = x_prev + alpha * z_prev;
+        r = r_prev - alpha * A * z_prev;
+        p = p_prev - alpha * A' * s_prev;
+        betta = dot(p, r)/dot(p_prev, r_prev);
+        z = r + betta * z_prev;
+        s = p + betta * s_prev;
         k = k + 1;
     end
 end
@@ -470,17 +476,23 @@ ok = isreal(A) * (all(eig(A) > 0));
 
 if ok
     while(k < Kmax) &&  (norm(A * x - b) > eps)
+        r_prev = r;
         ro_prev = ro;
         p_prev = p;
-        ro = my_dot(r_tilda, r);
-        betta = (ro/ro_prev)*(alpha/omega);
-        p = r + betta * (p_prev - omega * v);
+        alpha_prev = alpha;
+        omega_prev = omega;
+        v_prev = v;
+        x_prev = x;
+        
+        ro = my_dot(r_tilda, r_prev);
+        betta = (ro/ro_prev)*(alpha_prev/omega_prev);
+        p = r_prev + betta * (p_prev - omega_prev * v_prev);
         v = A * p;
         alpha = ro/my_dot(r_tilda, v);
-        s = r - alpha * v;
+        s = r_prev - alpha * v;
         t = A * s;
         omega = my_dot_cmplx(t, s)/my_dot_cmplx(t, t);
-        x = x + alpha * p + omega * s;
+        x = x_prev + alpha * p + omega * s;
         r = s - omega * t;
         k = k + 1;
     end

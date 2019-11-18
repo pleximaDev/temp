@@ -240,7 +240,7 @@ end
 
 
 
-figure('Name', 'Measured Data', 'NumberTitle', 'off');
+figure('Name', 'Measured Data', 'NumberTitle', 'off', 'Position', [200 200 1000 500]);
 clf;
 subplot(2,1,1);
 bar(T')
@@ -293,7 +293,7 @@ B = -D^(-1) * (L + U);
 g = D^(-1) * b;
 
 % if (eig(full(B)) < 1); ok = true; else; ok = false; end
-ok = (all(eig(B) < 1));
+ok = (all(abs(eig(B)) < 1));
 
 if ok 
     while(k < Kmax) && (norm(x_kplus1 - x_k) > eps) %%%%%% FFFFFF

@@ -1,5 +1,6 @@
 clc
 clear variables;
+format short
 
 
 %=========================================================================%
@@ -31,7 +32,7 @@ Kmax = 1000;
 
 %=========================================================================%
 %==============================obtaining data=============================%
-K = 4;
+K = 16;
 b = randn(K, 1);
 I = eye(K);
 
@@ -290,12 +291,11 @@ x = x0;
 B = -D^(-1) * (L + U);
 g = D^(-1) * b;
 
-% full() for sparse matrix
 % if (eig(full(B)) < 1); ok = true; else; ok = false; end
 ok = (all(eig(B) < 1));
 
 if ok 
-    while(k < Kmax) && (norm(x_kplus1 - x_k) > eps)
+    while(k < Kmax) && (norm(x_kplus1 - x_k) > eps) %%%%%% FFFFFF
         x_k = x_kplus1;
         for i = 1 : 1 : m
             sum = 0;
@@ -329,17 +329,23 @@ P = -(L + D)^(-1) * U;
 ok = norm(P) < 1;
 
 if ok
+    for i = 1 : 1 : m
+        for j = 1 : 1 : n
+            if j ~= i
+                c(i, j) = (-A(i, j)/A(i, i)) * (j ~= i) + 0 * (j == i);%%%FFFFF
+            end
+        end
+    end
+    
     while (k < Kmax) && (norm(A * x - b) > eps)
         for i = 1 : 1 : m
             d(i) = b(i)/A(i, i);
             sum1 = 0;
             for j = 1 : 1 : i - 1
-                c(i, j) = (-A(i, j)/A(i, i)) * (j ~= i) + 0 * (j == i);
                 sum1 = sum1 + c(i, j) * x(j);
             end
             sum2 = 0;
             for j = i + 1 : 1 : n
-                c(i, j) = (-A(i, j)/A(i, i)) * (j ~= i) + 0 * (j == i);
                 sum2 = sum2 + c(i, j) * x(j);
             end
             x(i) = sum1 + sum2 + d(i);
@@ -427,12 +433,12 @@ ok = isreal(A) * (all(eig(A) > 0));
 
 if ok
     while(k < Kmax) &&  (norm(A * x - b) > eps)
-        alpha = dot(p, r)/dot(s, A * z);
+        p_prev = p;
+        alpha = dot(p_prev, r)/dot(s, A * z);
         x = x + alpha * z;
-        temp = dot(p, r);
         r = r - alpha * A * z;
-        p = p - alpha * A' * s;
-        betta = dot(p, r)/temp;
+        p = p_prev - alpha * A' * s;
+        betta = dot(p, r)/dot(p_prev, r);
         z = r + betta * z;
         s = p + betta * s;
 
@@ -465,9 +471,10 @@ ok = isreal(A) * (all(eig(A) > 0));
 if ok
     while(k < Kmax) &&  (norm(A * x - b) > eps)
         ro_prev = ro;
+        p_prev = p;
         ro = my_dot(r_tilda, r);
         betta = (ro/ro_prev)*(alpha/omega);
-        p = r + betta * (p - omega * v);
+        p = r + betta * (p_prev - omega * v);
         v = A * p;
         alpha = ro/my_dot(r_tilda, v);
         s = r - alpha * v;
@@ -481,11 +488,6 @@ end
 end
 
 
-    
-    
-    
-    
-    
     
     
     

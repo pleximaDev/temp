@@ -1,7 +1,7 @@
 clc;
 clear variables;
 close all force;
-
+format short;
 
 fnc = @(t) lab_diff_f(t);
 
@@ -10,68 +10,77 @@ fnc = @(t) lab_diff_f(t);
 % [A, C, b, divider] = C_coeff(d, p, method)
 % divider of whole finite diff == 1/divider * (factorial(d)/1)
 
-[A, C, b, divider, d, p] = C_coeff(3, 4, "forward")
-
-[A, C, b, divider, d, p] = C_coeff(3, 4, "centered")
-% C = C(end:-1:1)
-% 1/8
-clc
-[A, C, b, divider, d, p] = C_coeff(1, 6, "forward")
-
-
-C_str = rats(C)
-
 % rats(num2str(C(1)))
-clc
-% [A, C, b, divider, d, p] = C_coeff(1, 8, "backward")
-% [str] = str_finite_diff(C, d, p, divider, "backward")
+
+[A, C, b, divider, d, p] = C_coeff(1, 4, "backward")
+[str] = str_finite_diff(C, d, p, divider, "backward")
 
 a = 0.2
 b = 0.7
 n = 20
 
-[df, t] = lab_diff_do(fnc, a, b, n, 1, "forward");
-[df, t] = lab_diff_do(fnc, a, b, n, 1, "backward");
-[df, t] = lab_diff_do(fnc, a, b, n, 2, "forward");
-[df, t] = lab_diff_do(fnc, a, b, n, 2, "backward");
-[df, t] = lab_diff_do(fnc, a, b, n, 2, "central");
-[df, t] = lab_diff_do(fnc, a, b, n, 4, "forward");
-[df, t] = lab_diff_do(fnc, a, b, n, 4, "backward");
-[df, t] = lab_diff_do(fnc, a, b, n, 4, "central");
-[df, t] = lab_diff_do(fnc, a, b, n, 6, "forward");
-[df, t] = lab_diff_do(fnc, a, b, n, 6, "backward");
-[df, t] = lab_diff_do(fnc, a, b, n, 6, "central");
-df = df'
+
+[finite_diff_df(:, 1, 1)] = lab_diff_do(fnc, a, b, n, 1, "forward"); 
+[finite_diff_df(:, 2, 1)] = lab_diff_do(fnc, a, b, n, 1, "backward");
+[finite_diff_df(:, 1, 2)] = lab_diff_do(fnc, a, b, n, 2, "forward");
+[finite_diff_df(:, 2, 2)] = lab_diff_do(fnc, a, b, n, 2, "backward");
+[finite_diff_df(:, 3, 2)] = lab_diff_do(fnc, a, b, n, 2, "central");
+[finite_diff_df(:, 1, 3)] = lab_diff_do(fnc, a, b, n, 4, "forward");
+[finite_diff_df(:, 2, 3)] = lab_diff_do(fnc, a, b, n, 4, "backward");
+[finite_diff_df(:, 3, 3)] = lab_diff_do(fnc, a, b, n, 4, "central");
+[finite_diff_df(:, 1, 4)] = lab_diff_do(fnc, a, b, n, 6, "forward");
+[finite_diff_df(:, 2, 4)] = lab_diff_do(fnc, a, b, n, 6, "backward");
+[finite_diff_df(:, 3, 4)] = lab_diff_do(fnc, a, b, n, 6, "central");
+
+
+
+%   1
+[finite_diff_df(:, 1, 1)] = lab_diff_do(fnc, a, b, n, 1, "forward");
+[finite_diff_df(:, 2, 1)] = lab_diff_do(fnc, a, b, n, 1, "backward");
+
+%   2
+[finite_diff_df(:, 1, 2)] = lab_diff_do(fnc, a, b, n, 2, "forward");
+[finite_diff_df(:, 2, 2)] = lab_diff_do(fnc, a, b, n, 2, "backward");
+[finite_diff_df(:, 3, 2)] = lab_diff_do(fnc, a, b, n, 2, "central");
+
+%   3
+[finite_diff_df(:, 1, 3)] = lab_diff_do(fnc, a, b, n, 4, "forward");
+[finite_diff_df(:, 2, 3)] = lab_diff_do(fnc, a, b, n, 4, "backward");
+[finite_diff_df(:, 3, 3)] = lab_diff_do(fnc, a, b, n, 4, "central");
+
+%   4
+
+[finite_diff_df(:, 1, 4)] = lab_diff_do(fnc, a, b, n, 6, "forward");
+[finite_diff_df(:, 2, 4)] = lab_diff_do(fnc, a, b, n, 6, "backward");
+[finite_diff_df(:, 3, 4)] = lab_diff_do(fnc, a, b, n, 6, "central");
+
+
+
+
 
 % #2
 %-------------
 h = (b - a)/n;
 t = a : h : b;
 %-------------
-
+% 
 [f] = lab_diff_f(t);
-
-
-
-[df2] = lab_diff_df(t);
-df2 = df2'
-
-
-
+[df] = lab_diff_df(t);
+% 
 figure(1)
 clf
-plot(t, df)
-hold on
-plot(t, df2)
-plot(t, f)
-grid on 
-grid minor
-hold off
+subplot(2, 2, 1);
+plot(t, finite_diff_df(:, 1, 1));
+hold on;
+plot(t, finite_diff_df(:, 1, 1));
+hold on;
+% plot()
+
 
 
 
 function [f] = lab_diff_f(t)
-v = 4 % [Hz]
+v = 4; % [Hz]
 omega = 2 * pi * v; % [rad/s]
 f = 1.16 * t + 0.13 * sin(omega * t) - 0.89 * t.^2;
 end

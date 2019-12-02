@@ -289,6 +289,7 @@ f(1, 3)
 
 % [    2*x1 + 2,        2*x2 + 2]
 % [ 2*x1 - 2*x2, 4*x2 - 2*x1 - 2]
+
 close all;
 df1_dx1 = 2 * x1 + 2;
 df2_dx1 = 2 * x1 - 2 * x2;
@@ -309,17 +310,28 @@ my_Jacobian(1,1)
 
 % return
 
-% % % x = [1,1]
-% % % fbody = formula(f(x(1), x(2)))
-% % % f1 = fbody(1)
-% % % f2 = fbody(2)
-% % % f1(1,1)
-% % % return
+x = [1,1]
+fbody = formula(f(x(1), x(2)))
+f1 = fbody(1)
+f2 = fbody(2)
+f1(1,1)
+
+fbody2 = formula(f(x1,x2))
+lel = fbody2(1)
+lel(1,1)
+whos fbody2
+subs(fbody2(1)/3, {x1,x2}, {1, 2})
+% return
+
 clc
 format short
-x = [4; 6]
-[J] = Jacobi_finite_diff(x, f, "Kek")
+x = [1; 1]
+[J] = Jacobi_finite_diff(x, f, "forward")
 my_Jacobian(x(1), x(2))
+J = jacobian([(x1 + 1)^2 + (x2 + 1)^2 + 2, (x2 - 1)^2 + (x2 - x1)^2], [x1,x2])
+
+subs(J(1),{1,1})
+
 
 function [J] = Jacobi_finite_diff(x, f, method)
 syms x1 x2
@@ -329,14 +341,48 @@ fbody = formula(f); % (x(1), x(2)))
 f1(x1,x2) = fbody(1);
 f2(x1,x2) = fbody(2);
 
-% f2(x(1), x(2))
-
 % df(i) = (fnc(t(i) + h) - fnc(t(i)))/h;
-J(1, 1) = (f1(x(1) + h, x(2)) - f1(x(1), x(2)))/h;
-J(2, 1) = (f2(x(1) + h, x(2)) - f2(x(1), x(2)))/h;
-J(1, 2) = (f1(x(1), x(2) + h) - f1(x(1), x(2)))/h;
-J(2, 2) = (f2(x(1), x(2) + h) - f2(x(1), x(2)))/h;
+switch method
+    case 'forward'
+        for i = 1 : 1 : length(x)
+            for j = 1 : 1 : length(x)
+                J(j, i) = (subs(fbody(j), {x1,x2}, {x(1) + h * (2 - i), x(2) + h * (i - 1)}) - ...
+                    subs(fbody(j), {x1,x2}, {x(1), x(2)}))/h
+            end
+        end
+    case 'backward'
+    case 'central'
+    otherwise
+        fprintf("You have chosen a nonexistent method!");
 end
+end
+
+function [J] = Jacobi_finite_diff_by_element(x, f, method)
+syms x1 x2
+J = NaN;
+h = 0.01;
+fbody = formula(f); % (x(1), x(2)))
+f1(x1,x2) = fbody(1);
+f2(x1,x2) = fbody(2);
+switch method
+    case 'forward'
+        for i = 1 : 1 : length(x)
+            J(1, i) = (f1(x(1) + h * (2 - i), x(2) + h * (i - 1)) - f1(x(1), x(2)))/h;
+            J(2, i) = (f2(x(1) + h * (2 - i), x(2) + h * (i - 1)) - f2(x(1), x(2)))/h;
+        end
+        
+%             J(1, 1) = (f1(x(1) + h, x(2)) - f1(x(1), x(2)))/h;
+%             J(2, 1) = (f2(x(1) + h, x(2)) - f2(x(1), x(2)))/h;
+%             J(1, 2) = (f1(x(1), x(2) + h) - f1(x(1), x(2)))/h;
+%             J(2, 2) = (f2(x(1), x(2) + h) - f2(x(1), x(2)))/h;
+    case 'backward'
+    case 'central'
+    otherwise
+        fprintf("You have chosen a nonexistent method!");
+end
+end
+
+
 
 
 function [f] = lab_diff_f(t)

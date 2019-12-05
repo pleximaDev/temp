@@ -459,7 +459,12 @@ grid minor;
 
 clc
 
-my_Jacobian(2 , 1)
+my_Jacobian(1,1)
+
+
+[J] = Broyden_funct(x, @f12, 3)
+
+return
 
 
 f
@@ -474,6 +479,12 @@ f
 % f(1, 1)
 
 
+
+function [f3] = f12(x)
+f1 = (x(1) + 1)^2 + (x(2) + 1)^2 + 2;
+f2 = (x(2) - 1)^2 + (x(2) - x(1))^2;
+f3 = [f1,f2];
+end
 
 function [J] = Jacobi_finite_diff(x, f, method)
 syms x1 x2
@@ -539,6 +550,18 @@ switch method
         end
     otherwise
         fprintf("You have chosen a nonexistent method!");
+end
+end
+
+
+function [J] = Broyden_funct(x, f12, kmax)
+x_k_1 = [1, 1];
+J = eye(2);
+for i = 1 : 1 : kmax
+        x_k = x_k_1 - (J^(-1) * f12(x_k_1)')';
+        J = J + ((f12(x_k) - f12(x_k_1) ...
+        - (J * (x_k - x_k_1)')')./((x_k - x_k_1) * (x_k - x_k_1)')) * (x_k - x_k_1)'
+        x_k_1 = x_k;
 end
 end
 

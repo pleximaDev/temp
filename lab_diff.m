@@ -8,8 +8,8 @@ format short;
 % [A, C, b, divider] = C_coeff(d, p, method)
 % divider of whole finite diff == 1/divider * (factorial(d)/1)
 
-% [A, C, b, divider, d, p] = C_coeff(1, 4, "backward")
-% [str] = str_finite_diff(C, d, p, divider, "backward")
+[A, C, b, divider, d, p] = C_coeff(1, 4, "backward");
+[str] = str_finite_diff(C, d, p, divider, "backward");
 
 
 
@@ -461,17 +461,15 @@ clc
 
 my_Jacobian(1,1)
 
-[J] = Jacobi_finite_diff_funct([1, 1], @f12, "forward")
-
-return
-[J] = Broyden_funct(x, @f12, 100)
+format short
+[J] = Broyden_funct(x, @f12, 3)
 
 return
 
 
 f
 % [J] = Broyden([1,1], f, 3)
-[J_0] = Jacobi_finite_diff([1,	1], f, "forward")
+[J_0] = Jacobi_finite_diff([1,2], f, "forward")
 
 [J] = Broyden_cell(J_0, x, f, 3)
 
@@ -482,10 +480,10 @@ f
 
 
 
-function [f_full] = f12(x)
+function [f3] = f12(x)
 f1 = (x(1) + 1)^2 + (x(2) + 1)^2 + 2;
 f2 = (x(2) - 1)^2 + (x(2) - x(1))^2;
-f_full = [f1,f2];
+f3 = [f1,f2];
 end
 
 function [J] = Jacobi_finite_diff(x, f, method)
@@ -519,39 +517,8 @@ switch method
 end
 end
 
-function [J] = Jacobi_finite_diff_funct(x, f, method)
-syms x1 x2
-J = NaN;
-h = 0.01;
-switch method
-    case 'forward'
-        for i = 1 : 1 : length(x)
-            for j = 1 : 1 : length(x)
-                J(j, i) = (f{j}(x(1) + h * (2 - i), x(2) + h * (i - 1)) - ...
-                    f{j}(x(1), x(2)))/h;
-            end
-        end
-    case 'backward'
-        for i = 1 : 1 : length(x)
-            for j = 1 : 1 : length(x)
-                J(j, i) = (f{j}(x(1), x(2)) - ...
-                    f{j}(x(1) - h * (2 - i), x(2) - h * (i - 1)))/h;
-            end
-        end
-    case 'central'
-        for i = 1 : 1 : length(x)
-            for j = 1 : 1 : length(x)
-                J(j, i) = (f{j}(x(1) + h * (2 - i), x(2) + h * (i - 1)) - ...
-                    f{j}(x(1) - h * (2 - i), x(2) - h * (i - 1)))/(2 * h);
-            end
-        end
-    otherwise
-        fprintf("You have chosen a nonexistent method!");
-end
-end
 
 
-%{
 function [J] = Jacobi_finite_diff_syms(x, f, method)
 syms x1 x2
 J = NaN;
@@ -585,19 +552,17 @@ switch method
         fprintf("You have chosen a nonexistent method!");
 end
 end
-%}
+
 
 function [J] = Broyden_funct(x, f12, kmax)
 x_k_1 = [1, 1];
+x_k = [2, 2];
 J = eye(2);
-x_k = x_k_1 + [1, 1];
 for i = 1 : 1 : kmax
-    f12(x_k) - f12(x_k_1)
-    (J * (x_k - x_k_1)')'
 %         x_k = x_k_1 - (J^(-1) * f12(x_k_1)')';
         J = J + ((f12(x_k) - f12(x_k_1) ...
-        - (J * (x_k - x_k_1)')')./(norm(x_k - x_k_1))^2) * (x_k - x_k_1)'
-%         x_k_1 = x_k;
+        - (J * (x_k - x_k_1)')')./((x_k - x_k_1) * (x_k - x_k_1)')) * (x_k - x_k_1)'
+        x_k_1 = x_k;
 end
 end
 

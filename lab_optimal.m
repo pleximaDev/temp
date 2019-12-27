@@ -30,7 +30,7 @@ k = k_';
 
 table(methods, Fmin, Xmin, k)
 
-x0 = zeros(size(fnc_vec_fd(x, 0), 1), 1);
+x0 = zeros(size(fnc_vec_fd(x, 0), 1), 1)
 
 [Fmin2(1), Xmin2(:,1), k2(1)] = lab_optimal_vec(fnc_vec, @fnc_vec_fd, @fnc_vec_hessian, x0, eps, Kmax, "Pokoord");
 [Fmin2(2), Xmin2(:,2), k2(2)] = lab_optimal_vec(fnc_vec, @fnc_vec_fd, @fnc_vec_hessian, x0, eps, Kmax, "Skoreish");
@@ -166,7 +166,7 @@ switch method
         % xkn = xk
         %xk = xk_1
         xk = x0;
-        xk_1 = [1, 1];
+        xk_1 = [5; 5];
         while abs(fnc(xk) - fnc(xk_1)) >= eps && norm(xk - xk_1) >= eps && k < Kmax
             k = k + 1;
             xk_1 = xk;
@@ -179,7 +179,7 @@ switch method
         
     case "Skoreish"
         xk = x0;
-        xk_1 = [1, 1];
+        xk_1 = [5; 5];
         while abs(fnc(xk) - fnc(xk_1)) >= eps && norm(xk - xk_1) >= eps && k < Kmax
             xk_1 = xk;
             k = k + 1;
@@ -189,9 +189,8 @@ switch method
         Fmin = fnc(Xmin);
         
     case "Newton"
-%         while abs(fnc(xk) - fnc(xk_1)) >= eps && norm(xk - xk_1) >= eps && k < Kmax
         xk = x0;
-        xk_1 = [1, 1];
+        xk_1 = [5; 5];
         while abs(fnc(xk) - fnc(xk_1)) >= eps && norm(xk - xk_1) >= eps && k < Kmax
             xk_1 = xk;
             k = k + 1;

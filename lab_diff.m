@@ -19,7 +19,7 @@ for n = 20 : 1000 - 20 : 1000
     fnc = @(t) lab_diff_f(t);
     a = 0.2;
     b = 0.7;
-    n
+    n 
 
     %-------------
     h = (b - a)/n;
@@ -29,12 +29,12 @@ for n = 20 : 1000 - 20 : 1000
     [f] = lab_diff_f(t);
     [df] = lab_diff_df(t);
     [finite_diff_df(:, 1, 1)] = lab_diff_do(fnc, a, b, n, 1, "forward");
-    [finite_diff_df(:, 2, 3)] = lab_diff_do(fnc, a, b, n, 1, "backward");
+    [finite_diff_df(:, 2, 1)] = lab_diff_do(fnc, a, b, n, 1, "backward");
     [finite_diff_df(:, 1, 2)] = lab_diff_do(fnc, a, b, n, 2, "forward");
     [finite_diff_df(:, 2, 2)] = lab_diff_do(fnc, a, b, n, 2, "backward");
     [finite_diff_df(:, 3, 2)] = lab_diff_do(fnc, a, b, n, 2, "central");
     [finite_diff_df(:, 1, 3)] = lab_diff_do(fnc, a, b, n, 4, "forward");
-    [finite_diff_df(:, 2, 1)] = lab_diff_do(fnc, a, b, n, 4, "backward");
+    [finite_diff_df(:, 2, 3)] = lab_diff_do(fnc, a, b, n, 4, "backward");
     [finite_diff_df(:, 3, 3)] = lab_diff_do(fnc, a, b, n, 4, "central");
     [finite_diff_df(:, 1, 4)] = lab_diff_do(fnc, a, b, n, 6, "forward");
     [finite_diff_df(:, 2, 4)] = lab_diff_do(fnc, a, b, n, 6, "backward");
@@ -43,6 +43,7 @@ for n = 20 : 1000 - 20 : 1000
     
 
     %============================plot============================
+    %
     Name = ['Finite differences for n = ', char(string(n))];
     figure('Name', Name,'Numbertitle', 'off')
 
@@ -76,6 +77,7 @@ for n = 20 : 1000 - 20 : 1000
       'Default derivative', 'Central finite difference');
     hold off;
 
+    %
     subplot(2, 2, 3);
     plot(t, finite_diff_df(:, 1, 3))
     title("Fourth order finite differences")
@@ -105,49 +107,111 @@ for n = 20 : 1000 - 20 : 1000
     legend('Forward finite difference','Backward finite difference', ...
       'Default derivative', 'Central finite difference');
     hold off;
-    %============================================================
-    
-%     finite_diff_df(:, 1, 1) = finite_diff_df(:, 1, 1)./norm(finite_diff_df(:, 1, 1));
-%     finite_diff_df(:, 2, 3) = finite_diff_df(:, 2, 3)./norm(finite_diff_df(:, 2, 3));
-%     finite_diff_df(:, 1, 2) = finite_diff_df(:, 1, 2)./norm(finite_diff_df(:, 1, 2));
-%     finite_diff_df(:, 2, 2) = finite_diff_df(:, 2, 2)./norm(finite_diff_df(:, 2, 2));
-%     finite_diff_df(:, 3, 2) = finite_diff_df(:, 3, 2)./norm(finite_diff_df(:, 3, 2));
-%     finite_diff_df(:, 1, 3) = finite_diff_df(:, 1, 3)./norm(finite_diff_df(:, 1, 3));
-%     finite_diff_df(:, 2, 1) = finite_diff_df(:, 2, 1)./norm(finite_diff_df(:, 2, 1));
-%     finite_diff_df(:, 3, 3) = finite_diff_df(:, 3, 3)./norm(finite_diff_df(:, 3, 3));
-%     finite_diff_df(:, 1, 4) = finite_diff_df(:, 1, 4)./norm(finite_diff_df(:, 1, 4));
-%     finite_diff_df(:, 2, 4) = finite_diff_df(:, 2, 4)./norm(finite_diff_df(:, 2, 4));
-%     finite_diff_df(:, 3, 4) = finite_diff_df(:, 3, 4)./norm(finite_diff_df(:, 3, 4));
-%     finite_diff_df(:, 3, 4) = finite_diff_df(:, 3, 4)./norm(finite_diff_df(:, 3, 4));
-%     df = df./norm(df);
+% %     %============================================================
+% %     
+% % 
+% % 
+% % 
+% % 
+% % 
 
-% % % % % %     finite_diff_df([1:6], :, :) = []
-% % % % % %     finite_diff_df([end - 6:end], :, :) = []
-% % % % % %     df(1 : 6) = [];
-% % % % % %     df(end-6 : end) = [];
+    finite_diff_df_smkln_1_1 = lab_diff_do(fnc, a, b, n, 1, "forward")
+    finite_diff_df_smkln_1_1(end) = []
+    finite_diff_df_smkln_2_1 = lab_diff_do(fnc, a, b, n, 1, "backward")
+    finite_diff_df_smkln_2_1(1) = []
+    finite_diff_df_smkln_1_2 = lab_diff_do(fnc, a, b, n, 2, "forward")
+    finite_diff_df_smkln_1_2(end-1:end) = []  
+    finite_diff_df_smkln_2_2 = lab_diff_do(fnc, a, b, n, 2, "backward");
+    finite_diff_df_smkln_2_2(1:2) = []
+    finite_diff_df_smkln_3_2 = lab_diff_do(fnc, a, b, n, 2, "central");
+    finite_diff_df_smkln_3_2(1) = []
+    finite_diff_df_smkln_3_2(end) = []
+    finite_diff_df_smkln_1_3 = lab_diff_do(fnc, a, b, n, 4, "forward");
+    finite_diff_df_smkln_1_3(end-4:end) = []
+    finite_diff_df_smkln_2_3 = lab_diff_do(fnc, a, b, n, 4, "backward");
+    finite_diff_df_smkln_2_3(1:4) = []
+    finite_diff_df_smkln_3_3 = lab_diff_do(fnc, a, b, n, 4, "central");
+    finite_diff_df_smkln_3_3(1:2) = []
+    finite_diff_df_smkln_3_3(end-2:end) = []
+    finite_diff_df_smkln_1_4 = lab_diff_do(fnc, a, b, n, 6, "forward");
+    finite_diff_df_smkln_1_4(end-6:end) = []
+    finite_diff_df_smkln_2_4 = lab_diff_do(fnc, a, b, n, 6, "backward");
+    finite_diff_df_smkln_2_4(1:6) = []
+    finite_diff_df_smkln_3_4 = lab_diff_do(fnc, a, b, n, 6, "central");
+    finite_diff_df_smkln_3_4(1:3) = []
+    finite_diff_df_smkln_3_4(end-3:end) = []
     
 
-    % 1 order
-    error(1, 1) = mean(abs(~isnan(finite_diff_df(:, 1, 1)) - df')%./abs(df)');
-    error(2, 1) = mean(abs(~isnan(finite_diff_df(:, 2, 1)) - df')%./abs(df)');
+
+    df1 = df
+    df1(end) = []
+    error(1, 1) = mean(abs((finite_diff_df_smkln_1_1) - df1))/length(df1);
+    df1 = df
+    df1(1) = []
+    error(2, 1) = mean(abs((finite_diff_df_smkln_2_1) - df1))/length(df1);
     error(3, 1) = 0;
 
     % 2 order
-    error(1, 2) = mean(abs(~isnan(finite_diff_df(:, 1, 2)) - df')%./abs(df)');
-    error(2, 2) = mean(abs(~isnan(finite_diff_df(:, 2, 2)) - df')./abs(df)');
-    error(3, 2) = mean(abs(~isnan(finite_diff_df(:, 3, 2)) - df')./abs(df)');
+    df1 = df
+    df1(end-1:end) = []
+    error(1, 2) = mean(abs((finite_diff_df_smkln_1_2) - df1))/length(df1)
+    
+    df1 = df
+    df1(1:2) = []
+    error(2, 2) = mean(abs((finite_diff_df_smkln_2_2) - df1))/length(df1)
+    df1 = df
+    df1(1) = []
+    df1(end) = []
+    error(3, 2) = mean(abs((finite_diff_df_smkln_3_2) - df1))/length(df1)
 
     % 4 order
-    error(1, 3) = mean(abs(~isnan(finite_diff_df(:, 1, 3)) - df')./abs(df)');
-    error(2, 3) = mean(abs(~isnan(finite_diff_df(:, 2, 3)) - df')./abs(df)');
-    error(3, 3) = mean(abs(~isnan(finite_diff_df(:, 3, 3)) - df')./abs(df)');
+    df1 = df
+    df1(end-4:end) = []
+    error(1, 3) = mean(abs((finite_diff_df_smkln_1_3) - df1))/length(df1)
+    df1 = df
+    df1(1:4) = []
+    error(2, 3) = mean(abs((finite_diff_df_smkln_2_3) - df1))/length(df1)
+    df1 = df
+    df1(1:2) = []
+    df1(end-2:end) = []
+    error(3, 3) = mean(abs((finite_diff_df_smkln_3_3) - df1))/length(df1)
 
     % 6 order
-    error(1, 4) = mean(abs(~isnan(finite_diff_df(:, 1, 4)) - df')./abs(df)');
-    error(2, 4) = mean(abs(~isnan(finite_diff_df(:, 2, 4)) - df')./abs(df)');
-    error(3, 4) = mean(abs(~isnan(finite_diff_df(:, 3, 4)) - df')./abs(df)');
+    
+    df1 = df
+    df1(end-6:end) = []
+    error(1, 4) = mean(abs((finite_diff_df_smkln_1_4) - df1))/length(df1)
+    df1 = df
+    df1(1:6) = []
+    error(2, 4) = mean(abs((finite_diff_df_smkln_2_4) - df1))/length(df1)
+    df1 = df
+    df1(1:3) = []
+    df1(end-3:end) = []
+    error(3, 4) = mean(abs((finite_diff_df_smkln_3_4) - df1))/length(df1)
 
-    error = error./norm(error); % 21;
+
+%right
+% % % % % % %     % 1 order
+% % % % % % %     error(1, 1) = mean(abs(~isnan(finite_diff_df(:, 1, 1)) - df'))
+% % % % % % %     error(2, 1) = mean(abs(~isnan(finite_diff_df(:, 2, 1)) - df'))
+% % % % % % %     error(3, 1) = 0;
+% % % % % % % 
+% % % % % % %     % 2 order
+% % % % % % %     error(1, 2) = mean(abs(~isnan(finite_diff_df(:, 1, 2)) - df'))
+% % % % % % %     error(2, 2) = mean(abs(~isnan(finite_diff_df(:, 2, 2)) - df'))
+% % % % % % %     error(3, 2) = mean(abs(~isnan(finite_diff_df(:, 3, 2)) - df'))
+% % % % % % % 
+% % % % % % %     % 4 order
+% % % % % % %     error(1, 3) = mean(abs(~isnan(finite_diff_df(:, 1, 3)) - df'))
+% % % % % % %     error(2, 3) = mean(abs(~isnan(finite_diff_df(:, 2, 3)) - df'))
+% % % % % % %     error(3, 3) = mean(abs(~isnan(finite_diff_df(:, 3, 3)) - df'))
+% % % % % % % 
+% % % % % % %     % 6 order
+% % % % % % %     error(1, 4) = mean(abs(~isnan(finite_diff_df(:, 1, 4)) - df'))
+% % % % % % %     error(2, 4) = mean(abs(~isnan(finite_diff_df(:, 2, 4)) - df'))
+% % % % % % %     error(3, 4) = mean(abs(~isnan(finite_diff_df(:, 3, 4)) - df'))
+
+% %     error = error./norm(error); % 21;
 
 %     % 1 order
 %     error(1, 1) = mean(abs(~isnan(finite_diff_df(:, 1, 1)) - df')./abs(df)');
@@ -185,18 +249,9 @@ for n = 20 : 1000 - 20 : 1000
     if n == 20
         clear variables;
     end
-%     clear variables;
+    clear variables;
 end
 
-wo = [finite_diff_df(:, 2, 1),finite_diff_df(:, 2, 2),finite_diff_df(:, 2, 3),finite_diff_df(:, 2, 4), df']
-
-te = [abs(~isnan(finite_diff_df(:, 2, 1)) - df'),abs(~isnan(finite_diff_df(:, 2, 2)) - df'),abs(~isnan(finite_diff_df(:, 2, 3)) - df'),abs(~isnan(finite_diff_df(:, 2, 4)) - df')]
-%     error(2, 3) = mean(abs(~isnan(finite_diff_df(:, 2, 3)) - df')./abs(df)');
-%     error(3, 3) = mean(abs(~isnan(finite_diff_df(:, 3, 3)) - df')./abs(df)');
-
-
-
-return
 
 
 
@@ -548,8 +603,8 @@ switch k
                 end
             case 'backward'
                 for i = 1 + 4 : 1 : length(t)
-                    df(i)=( 3 * fnc(t(i) - 4 * h) - 16 * fnc(t(i) - 3 * h) + 36 * fnc(t(i) - 2 * h) - 48 * fnc(t(i) - h) +25 * fnc(t(i)) )/12/h;
-%                     df(i) = (25 * fnc(t(i)) - 48 * fnc(t(i) - h) + 36 * fnc(t(i) - 2 * h) - 16 * fnc(t(i) - 3 * h) + 3 * fnc(t(i) - 4 * h))/(12*h);
+%                     df(i)=( 3 * fnc(t(i) - 4 * h) - 16 * fnc(t(i) - 3 * h) + 36 * fnc(t(i) - 2 * h) - 48 * fnc(t(i) - h) +25 * fnc(t(i)) )/12/h;
+                    df(i) = (25 * fnc(t(i)) - 48 * fnc(t(i) - h) + 36 * fnc(t(i) - 2 * h) - 16 * fnc(t(i) - 3 * h) + 3 * fnc(t(i) - 4 * h))/(12*h);
                 end
             case 'central'
                 for i = 1 + 2 : 1 : length(t) - 2

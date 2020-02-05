@@ -104,12 +104,12 @@ switch method
         while(k < Kmax && xk < b)
             k = k + 1;
             xk = a + k * (b - a)/(n + 1);
-            if(fnc(xk) < Fmin)
-                Xmin = xk;
-                Fmin = fnc(xk);
-            end
-%             Xmin = (fnc(xk) < Fmin) * xk + ~(fnc(xk) < Fmin) * Xmin;
-%             Fmin = (fnc(xk) < Fmin) * fnc(xk) + ~(fnc(xk) < Fmin) * Fmin;
+%            if(fnc(xk) < Fmin)
+%                Xmin = xk;
+%                Fmin = fnc(xk);
+%            end
+             Xmin = (fnc(xk) < Fmin) * xk + ~(fnc(xk) < Fmin) * Xmin;
+             Fmin = (fnc(xk) < Fmin) * fnc(xk) + ~(fnc(xk) < Fmin) * Fmin;
         end
         
     case 'Dichotomy'
@@ -117,13 +117,13 @@ switch method
             Xmin = (b + a)/2;
             k = k + 1;
             delta = (b - a)/4;
-            if (fnc(Xmin - delta) >= fnc(Xmin + delta))
+%{            if (fnc(Xmin - delta) >= fnc(Xmin + delta))
                 a = Xmin;
             else
                 b = Xmin;
-            end
-%             a = (fnc(Xmin - delta) >= fnc(Xmin + delta)) * Xmin + ~(fnc(Xmin - delta) >= fnc(Xmin + delta)) * a;
-%             b = ~(fnc(Xmin - delta) >= fnc(Xmin + delta)) * Xmin + (fnc(Xmin - delta) >= fnc(Xmin + delta)) * b;
+%}            end
+             a = (fnc(Xmin - delta) >= fnc(Xmin + delta)) * Xmin + ~(fnc(Xmin - delta) >= fnc(Xmin + delta)) * a;
+             b = ~(fnc(Xmin - delta) >= fnc(Xmin + delta)) * Xmin + (fnc(Xmin - delta) >= fnc(Xmin + delta)) * b;
         end
         Xmin = (a + b)/2;
         Fmin = fnc(Xmin);
@@ -152,13 +152,9 @@ switch method
         Fmin = fnc(Xmin);
     otherwise
         fprintf("You have chosen a nonexistent method!");
-        
 end
 
 end
-
-
-
 function [Fmin, Xmin, k] = lab_optimal_vec(fnc, fncd, fncH, x0, eps, Kmax, method)
 k = 0;
 switch method 
@@ -228,11 +224,7 @@ end
 Xmin = (a + b)/2;
 % Fmin = fnc(Xmin);
 % Fmin = fnc(xk + Xmin * fncd(xk, i));
-
 y = Xmin;
 end
 
 end
-
-
-
